@@ -3,9 +3,7 @@ require("dotenv").config();
 const {
     designedDeveloperObtained,
     designedTesterIsObtained,
-    obtainedStoryBugs,
     isBugDefOpen,
-    isIndependentTasks,
     priorityFormatting,
     dateFormatting,
 } = require("../../Utils/UtilsOnCloud");

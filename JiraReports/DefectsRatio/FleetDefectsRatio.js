@@ -1,9 +1,6 @@
 const axios = require("axios");
 require("dotenv").config();
 const {
-    designedDeveloperObtained,
-    designedTesterIsObtained,
-    obtainedStoryBugs,
     isBugDefOpen,
     isIndependentTasks,
     priorityFormatting,
