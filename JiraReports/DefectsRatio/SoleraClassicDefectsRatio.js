@@ -104,7 +104,7 @@ const monthNames = [
 ];
 let storiesByProject = [];
 let failedStatus = [];
-const fetchDaya = async () => {
+const fetchData = async () => {
     console.log("Fetching data...");
   try {
 
@@ -177,4 +177,4 @@ const fetchDaya = async () => {
   }
 };
 
-fetchDaya();
+fetchData();
