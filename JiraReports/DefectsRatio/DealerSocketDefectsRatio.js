@@ -113,73 +113,27 @@ const fetchData = async () => {
   }
   console.log("Total de issues: " + summary);
   console.log(allIssues.length);
-    allIssues.forEach((issue) => {
-      if (issue.fields.issuetype.name === "Task") {
-        let countingTasks = isIndependentTasks(issue.fields);
-        let bgCount = isBugDefOpen(issue.fields, "Bug");
-        let dfCount = isBugDefOpen(issue.fields, "Defect");
-        if (countingTasks > 0 && bgCount === 0 && dfCount === 0) {
-        } else {
-          storiesByProject.push({
-            IssueType: issue.fields.issuetype.name,
-            StoryNo: issue.key,
-            Project: issue.fields.project.name,
-            Bugs: isBugDefOpen(issue.fields, "Bug"),
-            Defects: isBugDefOpen(issue.fields, "Defect"),
-            Developer:
-              issue.fields.customfield_10077 !== null
-                ? typeof issue.fields.customfield_10077.displayName === "string"
-                  ? issue.fields.customfield_10077.displayName
-                  : ""
-                : "",
-            Tester:
-              issue.fields.customfield_10136 !== null
-                ? typeof issue.fields.customfield_10136.displayName === "string"
-                  ? issue.fields.customfield_10136.displayName
-                  : ""
-                : "",
-            StoryPoints:
-              issue.fields.customfield_10025 !== null
-                ? issue.fields.customfield_10025
-                : 0,
-            Priority: priorityFormatting(issue.fields.priority, jiraInstance),
-            Created: dateFormatting(issue.fields.created),
-            Month: monthNames[new Date(issue.fields.created).getMonth()], // March
-            Year: new Date(issue.fields.created).getFullYear(),
-            Updated: dateFormatting(issue.fields.updated),
-          });
-        }
-      } else {
-        storiesByProject.push({
-          IssueType: issue.fields.issuetype.name,
-          StoryNo: issue.key,
-          Project: issue.fields.project.name,
-          Bugs: isBugDefOpen(issue.fields, "Bug"),
-          Defects: isBugDefOpen(issue.fields, "Defect"),
-          Developer:
-            issue.fields.customfield_10077 !== null
-              ? typeof issue.fields.customfield_10077.displayName === "string"
-                ? issue.fields.customfield_10077.displayName
-                : ""
-              : "",
-          Tester:
-            issue.fields.customfield_10136 !== null
-              ? typeof issue.fields.customfield_10136.displayName === "string"
-                ? issue.fields.customfield_10136.displayName
-                : ""
-              : "",
-          StoryPoints:
-            issue.fields.customfield_10025 !== null
-              ? issue.fields.customfield_10025
-              : 0,
-          Priority: priorityFormatting(issue.fields.priority, jiraInstance),
-          Created: dateFormatting(issue.fields.created),
-          Month: monthNames[new Date(issue.fields.created).getMonth()], // March
-          Year: new Date(issue.fields.created).getFullYear(),
-          Updated: dateFormatting(issue.fields.updated),
-        });
-      }
+  allIssues.forEach((issue) => {
+    storiesByProject.push({
+      IssueType: issue.fields.issuetype.name,
+      StoryNo: issue.key,
+      Project: issue.fields.project.name,
+      Bugs: isBugDefOpen(issue.fields, "Bug"),
+      Defects: isBugDefOpen(issue.fields, "Defect"),
+      StoryBugs: isBugDefOpen(issue.fields, "Story Bug"),
+      Developer: designedDeveloperObtained(issue.fields),
+      Tester: designedTesterIsObtained(issue.fields, jiraInstance),
+      StoryPoints:
+        issue.fields.customfield_10004 !== null
+          ? issue.fields.customfield_10004
+          : 0,
+      Priority: priorityFormatting(issue.fields.priority, jiraInstance),
+      Created: dateFormatting(issue.fields.created),
+      Month: monthNames[new Date(issue.fields.created).getMonth()], // March
+      Year: new Date(issue.fields.created).getFullYear(),
+      Updated: dateFormatting(issue.fields.updated),
     });
+  });
 
 //   res.send({
 //     reportData: storiesByProject,
