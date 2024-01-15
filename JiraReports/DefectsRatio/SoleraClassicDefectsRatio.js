@@ -1,4 +1,6 @@
 const axios = require("axios");
+const fs = require('fs');
+const XLSX = require('xlsx');
 require("dotenv").config();
 const {
   isBugDefOpen,
@@ -8,6 +10,7 @@ const {
   priorityFormatting,
   dateFormatting,
 } = require("../../Utils/UtilsOnPrem");
+const excelFilePath = '../FleetTesting.xlsx';
 
 let projectIDS = [
   "NCMP",
@@ -175,6 +178,19 @@ const fetchData = async () => {
     console.log(loginError);
     throw loginError;
   }
+
+
+  if (fs.existsSync(excelFilePath)) {
+    const workbook = XLSX.readFile(excelFilePath);
+    const sheetName = workbook.SheetNames[0]; // Suponemos que el archivo Excel tiene una sola hoja
+    const existingData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+    const combinedData = [...existingData, ...storiesByProject];
+    const newWorkbook = XLSX.utils.book_new();
+    const newSheet = XLSX.utils.json_to_sheet(combinedData);
+    XLSX.utils.book_append_sheet(newWorkbook, newSheet, sheetName);
+    XLSX.writeFile(newWorkbook, excelFilePath);
+  }
+
 };
 
 fetchData();

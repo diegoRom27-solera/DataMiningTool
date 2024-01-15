@@ -1,4 +1,6 @@
 const axios = require("axios");
+const fs = require('fs');
+const XLSX = require('xlsx');
 require("dotenv").config();
 const {
     designedDeveloperObtained,
@@ -8,6 +10,7 @@ const {
     dateFormatting,
 } = require("../../Utils/UtilsOnCloud");
 
+const excelFilePath = '../FleetTesting.xlsx';
 
 let JIRA_URL = process.env.JIRA_URL_DS;
 let API_TOKEN = process.env.API_TOKEN_DS;
@@ -54,6 +57,7 @@ let projectIDS = [
 let startDate = process.env.START_DATE;
 let endDate = process.env.END_DATE;
 let allIssues = [];
+let jiraInstance = 'DealerSocket';
 let summary = 0;
 let failedStatus = [];
 const monthNames = [
@@ -132,15 +136,16 @@ const fetchData = async () => {
       Updated: dateFormatting(issue.fields.updated),
     });
   });
-
-//   res.send({
-//     reportData: storiesByProject,
-//     failedResults: failedStatus,
-//   });
-
-
-
-
+  if (fs.existsSync(excelFilePath)) {
+    const workbook = XLSX.readFile(excelFilePath);
+    const sheetName = workbook.SheetNames[0]; // Suponemos que el archivo Excel tiene una sola hoja
+    const existingData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+    const combinedData = [...existingData, ...storiesByProject];
+    const newWorkbook = XLSX.utils.book_new();
+    const newSheet = XLSX.utils.json_to_sheet(combinedData);
+    XLSX.utils.book_append_sheet(newWorkbook, newSheet, sheetName);
+    XLSX.writeFile(newWorkbook, excelFilePath);
+  }
 
 }
 

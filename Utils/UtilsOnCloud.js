@@ -206,7 +206,6 @@ const designedDeveloperObtained = (field) => {
 
   function priorityFormatting(priority,jiraInstance) {
     let finalP;
-    console.log(priority);
     if (priority !== null) {
       if (priority.name !== "Not Prioritized") {
         if (jiraInstance === "DealerSocket") {
