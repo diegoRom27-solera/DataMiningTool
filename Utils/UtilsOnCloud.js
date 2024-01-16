@@ -1,12 +1,12 @@
 
 const designedDeveloperObtained = (field) => {
-    if (field.customfield_16289 !== null && field.customfield_16289 !== undefined) {
+    if (field.hasOwnProperty("customfield_10077")) {
       if (
-        field.customfield_16289.displayName !== null &&
-        field.customfield_16289.displayName !== undefined &&
-        field.customfield_16289.hasOwnProperty("displayName")
+        field.customfield_10077.displayName !== null &&
+        field.customfield_10077.displayName !== undefined &&
+        field.customfield_10077.hasOwnProperty("displayName")
       ) {
-        return field.customfield_16289.displayName;
+        return field.customfield_10077.displayName;
       } else {
         return "";
       }
