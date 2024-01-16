@@ -425,3 +425,5 @@ const fetchData = async (url) => {
   console.log(failedStatus.length);
 
 }
+
+fetchData();
