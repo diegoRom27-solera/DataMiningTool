@@ -184,7 +184,7 @@ const fetchData = async () => {
           key: issue.key,
           project: issue.fields.project.name,
           issueType: issue.fields.issuetype.name,
-          developer: designedDeveloperObtained(issue.fields),
+          developer: designedDeveloperObtained(issue.fields, jiraInstance),
         });
       } else {
         issue.changelog.histories.forEach((history) => {
@@ -246,7 +246,7 @@ const fetchData = async () => {
 
         allFixedAndReopenByUSER.push({
           project: issue.fields.project.name,
-          developer: designedDeveloperObtained(issue.fields),
+          developer: designedDeveloperObtained(issue.fields, jiraInstance),
           key: issue.key,
           issueType: issue.fields.issuetype.name,
           reopenIssues: finalReopenCount > 0 ? 1 : 0,
