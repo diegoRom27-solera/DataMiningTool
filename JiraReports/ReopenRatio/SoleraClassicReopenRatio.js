@@ -415,3 +415,5 @@ const fetchData = async () => {
  
   
 };
+
+fetchData();
