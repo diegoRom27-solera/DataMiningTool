@@ -1,7 +1,7 @@
 const axios = require("axios");
 const fs = require("fs");
 const XLSX = require("xlsx");
-const excelFilePath = "../FleetTesting.xlsx";
+const excelFilePath = "../FleetReopen.xlsx";
 
 require("dotenv").config();
 const {
@@ -165,11 +165,11 @@ const fetchData = async () => {
               : "",
           key: issue.key,
           issueType: issue.fields.issuetype.name,
-          statusReopen: statusReopen,
-          statusFixed: statusFixed,
+        //   statusReopen: statusReopen,
+        //   statusFixed: statusFixed,
           reopenIssues: finalReopenCount > 0 ? 1 : 0,
           fixedIssues: finalFixedCount > 0 ? 1 : 1,
-          realFixed: finalFixedCount,
+        //   realFixed: finalFixedCount,
           year: new Date(lastDateHistorie).getFullYear(),
           month: monthNames[new Date(lastDateHistorie).getMonth()], // March
           // day: new Date(lastDateHistorie).getDate(),
@@ -182,7 +182,7 @@ const fetchData = async () => {
           //       : ""
           //     : "",
           // issueType: issue.fields.issuetype.name,
-          statuses: statuses,
+        //   statuses: statuses,
         });
       }
     }
@@ -300,18 +300,18 @@ const fetchData = async () => {
               developer: issue.developer,
               key: issue.key,
               issueType: issue.issueType,
-              statusReopen: statusReopen,
-              statusFixed: statusFixed,
+            //   statusReopen: statusReopen,
+            //   statusFixed: statusFixed,
               reopenIssues: finalReopenCount > 0 ? 1 : 0,
               fixedIssues: finalFixedCount > 0 ? 1 : 1,
-              realFixed: finalFixedCount,
+            //   realFixed: finalFixedCount,
               year: new Date(lastDateHistorie).getFullYear(),
               month: monthNames[new Date(lastDateHistorie).getMonth()],
               // day: new Date(lastDateHistorie).getDate(),
               // dayName: new Date(lastDateHistorie).getDay(),
               updated: dateFormatting(lastDateHistorie),
               // teamName: issue.teamName,
-              statuses: statuses,
+            //   statuses: statuses,
             });
           }
         }
@@ -322,7 +322,16 @@ const fetchData = async () => {
 
     console.log('finalReport', finalReport.length);
 
-
+    if (fs.existsSync(excelFilePath)) {
+        const workbook = XLSX.readFile(excelFilePath);
+        const sheetName = workbook.SheetNames[0]; // Suponemos que el archivo Excel tiene una sola hoja
+        const existingData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+        const combinedData = [...existingData, ...finalReport];
+        const newWorkbook = XLSX.utils.book_new();
+        const newSheet = XLSX.utils.json_to_sheet(combinedData);
+        XLSX.utils.book_append_sheet(newWorkbook, newSheet, sheetName);
+        XLSX.writeFile(newWorkbook, excelFilePath);
+      }
   
 };
 
